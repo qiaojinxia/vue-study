@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Vue单文件例子</title>
+    <style>
+.green{
+    background: #50f470;
+
+}
+.blue{
+    background:blue;
+
+}
+        .css1{
+            height: 30px;
+            width: 130px;
+        }
+        .css2{
+            background-color: grey ;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+<body>
+
+<div id="box">
+    {{10+ 20}}
+    {{var1 + var2}}
+
+
+    {{var1 > var2 ? 'yes':'no'}}
+
+    <div v-html="myhtml" >
+    </div>
+
+
+    <div v-show="!isshow" >
+        display false
+    </div>
+    <div v-show="isshow" >
+        display or none
+    </div>
+
+    <div v-if="iscreated" >
+        be created
+    </div>
+    <hr>
+    <label>动态绑定class 通过true/false动态绑定</label>
+    <div :class="isActivate?'green':'blue'">
+        test clss blind
+    </div>
+
+    <button @click="classtransfer()" >Click Me</button>
+
+    <label>动态绑定class 通过KVmap动态绑定</label>
+    <div :class="classobj">
+        test clss blind
+    </div>
+    <button @click="alterclass()" >alter classobj</button>
+    <button @click="removeclass()" >remove classobj</button>
+    <br>
+    <label>动态绑定class 通过数组动态绑定</label>
+    <div :class="classarray">
+        test clss blind
+    </div>
+
+    <button @click="pushclasarray()" >push clasarray</button>
+    <button @click="popclassarray()" >pop classarray</button>
+
+    <hr>
+    <label>动态修改style 通过变量</label>
+    <div :style="'background:' + (dynamicActivate?'red':'yellow')">
+        dynamic style
+    </div>
+
+    <button @click="alterdynamicstyle()" >alter Style</button>
+
+    <div :style="'background:' + color">
+        dynamic style
+    </div>
+    <label>动态修改style 通过map</label>
+    <div :style="styleobj">
+        dynamic styleobj
+</div>
+
+
+
+    <button @click="alterstyle()" >alter Style</button>
+    <button @click="removestyle()" >remove Style</button>
+    <br>
+    <label>动态修改style 通过数组</label>
+    <div :style="stylearr">
+        dynamic stylearr
+    </div>
+    <button @click="pushstyle()" >Push Style</button>
+    <button @click="deletestyle()" >Pop Style</button>
+
+    <hr>
+    <label>条件分支</label>
+    <div v-if="select === 1">
+        branch 1
+    </div>
+    <div v-else-if="select === 2">
+        branch 2
+    </div>
+    <div v-else="select === 3">
+        branch 3
+    </div>
+    <hr>
+    <label>v-for循环列表</label>
+    <ul>
+        <li v-for="data in datalist" key="data">
+            {{data}}
+        </li>
+    </ul>
+    <input  v-model="lidata" />
+    <button @click="pushdata()" >Push data</button>
+    <button @click="popdata()" >delete data</button>
+    <select name="public-choice" v-model="couponSelected">
+        <option :value="index" v-for="(coupon,index) in datalist" key="index" >{{coupon}}</option>
+    </select>
+    <button @click="alterdata()" >alter data</button>
+    <ul>
+        <li v-for="(val,key) in dataobj">
+            {{key+'  '+val}}
+        </li>
+    </ul>
+    <hr>
+    <label>通过触发input改变触发方法</label>
+    <input type="text" v-model="myevent" @input="myinput">
+    <label   >{{inputevent}}</label>
+
+    <hr>
+    <label>阻止传递事件</label>
+    <button @click="handler($event)"> Click Me</button>
+    <button @click.stop="handler($event)"> Click Me</button>
+    <br>
+    <label>阻止默认行为</label>
+    <a href="http://www.baidu.com/" @click="defaulthandler($event)"> Default Action</a>
+    <a href="http://www.baidu.com/" @click.prevent="defaulthandler($event)">Prevent Default Action</a>
+    <br>
+    <label>响应非自己的事件</label>
+    <ul @click="justhandlermyevent($event)">
+        <li @click="handlerevent($event)" > 123</li>
+    </ul>
+    <label>不响应非自己的事件</label>
+    <ul @click.self="justhandlermyevent($event)">
+        <li @click="handlerevent($event)" > 123</li>
+    </ul>
+    <hr>
+    <label>单次响应事件</label>
+    <ul @click.self="justhandlermyevent($event)">
+        <li @click.once="handlerevent($event)" >once click event</li>
+    </ul>
+    <hr>
+    <label>响应回车键</label>
+    <input type="text" @keyup.enter="handlerenter($event)" />
+
+    <hr>
+    <label>根据键值响应</label>
+
+    <input type="text" @keyup.13="handlerenter($event)" />
+
+    <hr>
+    <label>v-mode绑定数据</label>
+
+    <input type="text" v-model="blindvar" /> //绑定input
+    <input type="checkbox" v-model="isChecked" /> //绑定checkbox
+    <textarea type="text" v-model="blindvar" ></textarea>//绑定多行文本
+    <label>{{blindvar}}</label>
+    <hr>
+    <label>v-mode绑定多个checkbox</label>
+    <input type="checkbox" v-model="isCheckedList" value="Music" /> Music
+    <input type="checkbox" v-model="isCheckedList" value="Running" /> Running
+    <input type="checkbox" v-model="isCheckedList" value="Walk" /> Walk
+    <input type="checkbox" v-model="isCheckedList" value="Swimming" /> Swimming
+    <label>{{isCheckedList}}</label>
+    <hr>
+    <label>v-mode绑定单选框</label>
+    <input type="radio" v-model="picked" value="Music" /> Music
+    <input type="radio" v-model="picked" value="Running" /> Running
+    <input type="radio" v-model="picked" value="Walk" /> Walk
+    <input type="radio" v-model="picked" value="Swimming" /> Swimming
+    <label>{{picked}}</label>
+
+</div>
+</body>
+<script type="text/javascript">
+
+
+new Vue({
+    el:"#box",
+    data:{
+        var1:1,
+        var2:2,
+        myhtml:"<b>mydemo</b>",
+        isshow:false,
+        iscreated:true,
+        isActivate:false,
+        dynamicActivate:false,
+        classobj:{css1:true,css2:true},
+        classarray:[],
+        color:"red",
+        select:1,
+        styleobj:{
+            "backgroundColor":"orange",
+        },
+        stylearr:[],
+        datalist:["content1","content2","content3","content4"],
+        dataobj:{
+            'name':"caomao",
+            'age':"1",
+            'sex':"xx",
+            'favor':"sleep",
+        },
+        lidata:'changeme',
+        indexlabel:'0',
+        couponSelected: '',
+        myevent:'',
+        inputevent:'<-change it',
+        blindvar:'',
+        isChecked:true,
+        isCheckedList:[],
+        picked:'',
+    },
+    methods:{
+
+        classtransfer(){
+           this.isActivate = !this.isActivate
+        },
+        alterdynamicstyle(){
+            this.dynamicActivate = !this.dynamicActivate
+        },
+        alterclass(){
+            if(this.classobj['css1'] ==false && this.classobj['css2'] ==true){
+                this.classobj['css1'] =!this.classobj['css1'];
+                this.classobj['css2'] =!this.classobj['css2'];
+            }else if (this.classobj['css1'] ==true && this.classobj['css2'] ==false){
+                this.classobj['css1'] =!this.classarray['css1'];
+                this.classobj['css2'] =!this.classobj['css2'];
+            }else{
+                this.classobj['css1'] =false;
+            }
+
+        },
+        pushclasarray(){
+            this.classarray.push('css1');
+            this.classarray.push('css2');
+        },
+        popclassarray(){
+            this.classarray.pop('css1');
+            this.classarray.pop('css2');
+        },
+        removeclass(){
+            this.classobj['css1'] =false;
+            this.classobj['css2'] =false;
+
+        },
+        alterstyle(){
+            this.styleobj['backgroundColor']='pink';
+        },
+        removestyle(){
+            this.styleobj['backgroundColor']='';
+        },
+        pushstyle(){
+            this.stylearr.push({"backgroundColor":"red"})
+        },
+        deletestyle(){
+            this.stylearr.pop("backgroundColor");
+        },pushdata(){
+            this.datalist.push(this.lidata);
+        },popdata(){
+            this.datalist.splice(this.datalist.indexOf(this.lidata), 1)
+        },alterdata(){
+            //Vue.set(this.datalist,this.couponSelected,this.lidata);
+            this.datalist.splice(this.couponSelected, 1,this.lidata )
+        },myinput(){
+            this.inputevent = this.myevent;
+            console.log(this.myevent);
+
+        },handler(e) {
+            console.log(e);
+            //阻止事件向上冒泡
+            e.stopPropagation();
+
+        },defaulthandler(e) {
+            console.log(e);
+
+
+        }, handlerevent(e){
+            alert(e);
+        },justhandlermyevent(e){
+            alert(e);
+        },handlerenter(e){
+            alert(e);
+        }
+
+
+    }
+})
+</script>
+</html>
+

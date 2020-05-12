@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Vue单文件例子</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+<body>
+
+<div id="cart">
+    <input type="checkbox" v-model="selectall"  @change="selecta()" >
+    <ul>
+        <li v-for="(good,index) in datalist">
+            <input type="checkbox" v-model="checkarr"  @change="checkselect()" :value="good.price * good.number" >
+
+            {{good}}
+            <button @click="makeadd(good)" >+</button>
+            {{good.number}}
+            <button @click="makesub(good,index)" >-</button>
+        </li>
+
+
+
+    </ul>
+    {{checkarr}}
+    <p>总金额:{{ getsummary()}}</p>
+</div>
+</body>
+<script type="text/javascript">
+    new Vue({
+        el:"#cart",
+        data:{
+            checkarr:[],
+            selectall:false,
+            datalist:[
+
+                {
+                    id:1,
+                    name:"Good1",
+                    price:10,
+                    number:1,
+
+                },{
+                    id:2,
+                    name:"Good2",
+                    price:23,
+                    number:1,
+
+                },{
+                    id:3,
+                    name:"Good3",
+                    price:43,
+                    number:1,
+
+                },{
+                    id:4,
+                    name:"Good4",
+                    price:15,
+                    number:1,
+
+                },{
+                    id:5,
+                    name:"Good5",
+                    price:17,
+                    number:1,
+
+                },{
+                    id:6,
+                    name:"Good6",
+                    price:41,
+                    number:1,
+
+                },{
+                    id:7,
+                    name:"Good7",
+                    price:32,
+                    number:1,
+
+                },
+            ],
+        },
+        methods:{
+            getsummary(){
+                var sum = 0;
+                for(var i in this.checkarr){
+                    sum+= this.checkarr[i];
+                }
+                return sum;
+            },
+            selecta(){
+                if(!this.selectall){
+                    this.checkarr =[];
+                }else{
+                    var arr =[];
+                    for(var i in this.datalist){
+                        arr[i] =  this.datalist[i].price * this.datalist[i].number;
+                    }
+                    console.log(arr);
+                    this.checkarr =arr;
+                }
+            },
+            checkselect(){
+                if(this.checkarr.length === this.datalist.length){
+                    this.selectall = true;
+                }else if(this.checkarr.length === 0){
+                    this.selectall = false;
+                }
+            },
+            makeadd(good){
+                good.number ++;
+
+            },
+            makesub(good){
+                if(good.number == 1){
+                    this.datalist.splice(this.datalist.indexOf(good), 1)//删除数据
+                }
+                good.number --;
+
+            }
+        }
+    })
+</script>
+</html>
